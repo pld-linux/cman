@@ -8,7 +8,7 @@ License:	GPL
 Group:		Applications/System
 Source0:	%{name}.tar.gz
 # Source0-md5:	76edec5d961fd1cf46ccac2b7b006f37
-URL:		http://sources.redhat.com/cluster/
+URL:		http://sources.redhat.com/cluster/cman/
 BuildRequires:	ccs-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 

@@ -1,6 +1,5 @@
-#
-# Conditional build:
-Summary:	general-purpose symmetric cluster manager
+Summary:	General-purpose symmetric cluster manager
+Summary(pl):	Zarz±dca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
 %define	snap	20040625
 Version:	0.0.0.%{snap}.1
@@ -24,6 +23,18 @@ and managing instances of external systems that require cluster
 management. The CMAN cluster manager is the foundational system upon
 which DLM, GFS, CLVM, and Fence all depend. The CMAN API in the kernel
 and userspace is general and available for other programs to use.
+
+%description -l pl
+MAN to zarz±dca opartych na j±drze symetrycznych klastrów ogólnego
+przeznaczenia. Sk³ada siê z dwóch czê¶ci. Zarz±dca po³±czeñ
+(Connection Manager, cnxman) obs³uguje cz³onkostwo, komunikacjê,
+kworum, powiadamianie o zdarzeniach i przej¶cia. Zarz±dca us³ug
+(Service Manager, sm) obs³uguje "grupy us³ug", które s± ogólnym
+sposobem reprezentacji i zarz±dzania instancjami zewnêtrznych systemów
+wymagaj±cych zarz±dzania klastrem. Zarz±dca klastrów CMAN to
+podstawowy system, na którym polegaj± DLM, GFS, CLVM i Fence. API
+CMAN-a w j±drze i przestrzeni u¿ytkownika jest ogólne i w ca³o¶ci
+dostêpne do wykorzystania w innych programach.
 
 %prep
 %setup -q -n %{name}

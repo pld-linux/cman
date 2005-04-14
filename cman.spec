@@ -1,15 +1,19 @@
 Summary:	General-purpose symmetric cluster manager
 Summary(pl):	Zarz±dca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-%define	snap	20040625
-Version:	0.0.0.%{snap}.1
-Release:	1
-License:	GPL
+Version:	1.0
+%define	bver	pre32
+Release:	0.%{bver}.1
+License:	GPL v2
 Group:		Applications/System
-Source0:	%{name}.tar.gz
-# Source0-md5:	76edec5d961fd1cf46ccac2b7b006f37
+Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}-%{bver}.tar.gz
+# Source0-md5:	0564c8b91dfccb75de792414cccf16bd
+# from cman-kernel CVS
+Source1:	cnxman-socket.h
+# NoSource1-md5: 5b10f050be925739f47b27ddb5075f5f (rev. 1.8)
 URL:		http://sources.redhat.com/cluster/cman/
 BuildRequires:	ccs-devel
+BuildRequires:	perl-base
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -37,18 +41,24 @@ CMAN-a w j±drze i przestrzeni u¿ytkownika jest ogólne i w ca³o¶ci
 dostêpne do wykorzystania w innych programach.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{version}-%{bver}
+
+install -d include/cluster
+cp -f %{SOURCE1} include/cluster
+
+%{__perl} -pi -e 's/-g -O/%{rpmcflags}/' lib/Makefile
+%{__perl} -pi -e 's/-g/%{rpmcflags}/' {cman_tool,tests}/Makefile
 
 %build
 ./configure \
 	--incdir=%{_includedir} \
-	--kernel_src=%{_kernelsrcdir} \
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir}
 %{__make} \
-	CC="%{__cc}"
+	CC="%{__cc}" \
+	incdir=`pwd`/include
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -62,3 +72,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/*
+%{_mandir}/man5/cman.5*
+%{_mandir}/man8/cman_tool.8*
+#%attr(754,root,root) /etc/rc.d/init.d/cman

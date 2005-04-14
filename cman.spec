@@ -40,6 +40,17 @@ podstawowy system, na którym polegaj± DLM, GFS, CLVM i Fence. API
 CMAN-a w j±drze i przestrzeni u¿ytkownika jest ogólne i w ca³o¶ci
 dostêpne do wykorzystania w innych programach.
 
+%package devel
+Summary:	CMAN header files
+Summary(pl):	Pliki nag³ówkowe CMAN
+Group:		Development/Libraries
+
+%description devel
+CMAN header files.
+
+%description devel -l pl
+Pliki nag³ówkowe CMAN.
+
 %prep
 %setup -q -n %{name}-%{version}-%{bver}
 
@@ -66,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT%{_includedir}/cluster
+install include/cluster/cnxman-socket.h $RPM_BUILD_ROOT%{_includedir}/cluster
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -75,3 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/cman.5*
 %{_mandir}/man8/cman_tool.8*
 #%attr(754,root,root) /etc/rc.d/init.d/cman
+
+%files devel
+%defattr(644,root,root,755)
+# XXX dir shared with dml-devel
+%dir %{_includedir}/cluster
+%{_includedir}/cluster/cnxman-socket.h

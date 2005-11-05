@@ -1,16 +1,12 @@
 Summary:	General-purpose symmetric cluster manager
 Summary(pl):	Zarz±dca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-Version:	1.0
-%define	bver	pre32
-Release:	0.%{bver}.1
+Version:	1.01.00
+Release:	1
 License:	GPL v2
 Group:		Applications/System
-Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}-%{bver}.tar.gz
-# Source0-md5:	0564c8b91dfccb75de792414cccf16bd
-# from cman-kernel CVS
-Source1:	cnxman-socket.h
-# NoSource1-md5: 5b10f050be925739f47b27ddb5075f5f (rev. 1.8)
+Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
+# Source0-md5:	e98551b02ee8ed46ae0ab8fca193d751
 URL:		http://sources.redhat.com/cluster/cman/
 BuildRequires:	ccs-devel
 BuildRequires:	perl-base
@@ -51,16 +47,29 @@ CMAN header files.
 %description devel -l pl
 Pliki nag³ówkowe CMAN.
 
+%package static
+Summary:	CMAN static library
+Summary(pl):	Biblioteka statyczna CMAN
+Group:		Development/Libraries
+
+%description static
+CMAN static library.
+
+%description devel -l pl
+Biblioteka statyczna CMAN.
+
 %prep
-%setup -q -n %{name}-%{version}-%{bver}
+%setup -q -n cluster-%{version}
+install -d %{name}/include/cluster
+ln -s . %{name}/include/cluster/cluster
+install %{name}-kernel/src/cnxman-socket.h %{name}/include/cluster
 
-install -d include/cluster
-cp -f %{SOURCE1} include/cluster
-
+cd %{name}
 %{__perl} -pi -e 's/-g -O/%{rpmcflags}/' lib/Makefile
 %{__perl} -pi -e 's/-g/%{rpmcflags}/' {cman_tool,tests}/Makefile
 
 %build
+cd %{name}
 ./configure \
 	--incdir=%{_includedir} \
 	--libdir=%{_libdir} \
@@ -73,6 +82,7 @@ cp -f %{SOURCE1} include/cluster
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd %{name}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -83,9 +93,13 @@ install include/cluster/cnxman-socket.h $RPM_BUILD_ROOT%{_includedir}/cluster
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/*
+%attr(755,root,root) %{_libdir}/*.so.*
 %{_mandir}/man5/cman.5*
 %{_mandir}/man8/cman_tool.8*
 #%attr(754,root,root) /etc/rc.d/init.d/cman
@@ -94,4 +108,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 # XXX dir shared with dml-devel
 %dir %{_includedir}/cluster
-%{_includedir}/cluster/cnxman-socket.h
+%{_includedir}/*.h
+%{_includedir}/cluster/*.h
+%attr(755,root,root) %{_libdir}/*.so
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/*.a

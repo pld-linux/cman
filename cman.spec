@@ -40,6 +40,7 @@ dostêpne do wykorzystania w innych programach.
 Summary:	CMAN header files
 Summary(pl):	Pliki nag³ówkowe CMAN
 Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
 
 %description devel
 CMAN header files.
@@ -51,6 +52,7 @@ Pliki nag³ówkowe CMAN.
 Summary:	CMAN static library
 Summary(pl):	Biblioteka statyczna CMAN
 Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 CMAN static library.
@@ -93,8 +95,8 @@ install include/cluster/cnxman-socket.h $RPM_BUILD_ROOT%{_includedir}/cluster
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)

@@ -101,7 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/*
-%attr(755,root,root) %{_libdir}/*.so.*
+%attr(755,root,root) %{_libdir}/libcman.so.*.*
 %{_mandir}/man5/cman.5*
 %{_mandir}/man8/cman_tool.8*
 #%attr(754,root,root) /etc/rc.d/init.d/cman
@@ -112,8 +112,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/cluster
 %{_includedir}/*.h
 %{_includedir}/cluster/*.h
-%attr(755,root,root) %{_libdir}/*.so
+%attr(755,root,root) %{_libdir}/libcman.so
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/*.a
+%{_libdir}/libcman.a

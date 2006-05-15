@@ -1,12 +1,12 @@
 Summary:	General-purpose symmetric cluster manager
 Summary(pl):	Zarz±dca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-Version:	1.01.00
+Version:	1.02.00
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	e98551b02ee8ed46ae0ab8fca193d751
+# Source0-md5:	131c34c8b66d8d7d74384839ed4091d0
 URL:		http://sources.redhat.com/cluster/cman/
 BuildRequires:	ccs-devel
 BuildRequires:	perl-base

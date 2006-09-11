@@ -103,8 +103,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/libcman.so.*.*
 %{_mandir}/man5/cman.5*
+%{_mandir}/man5/qdisk.5*
 %{_mandir}/man8/cman_tool.8*
+%{_mandir}/man8/mkqdisk.8*
+%{_mandir}/man8/qdiskd.8*
 #%attr(754,root,root) /etc/rc.d/init.d/cman
+#%attr(754,root,root) /etc/rc.d/init.d/qdiskd
 
 %files devel
 %defattr(644,root,root,755)

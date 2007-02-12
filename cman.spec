@@ -1,5 +1,5 @@
 Summary:	General-purpose symmetric cluster manager
-Summary(pl):	Zarz±dca symetrycznych klastrów ogólnego przeznaczenia
+Summary(pl.UTF-8):   ZarzÄ…dca symetrycznych klastrÃ³w ogÃ³lnego przeznaczenia
 Name:		cman
 Version:	1.03.00
 Release:	1
@@ -24,40 +24,40 @@ management. The CMAN cluster manager is the foundational system upon
 which DLM, GFS, CLVM, and Fence all depend. The CMAN API in the kernel
 and userspace is general and available for other programs to use.
 
-%description -l pl
-MAN to zarz±dca opartych na j±drze symetrycznych klastrów ogólnego
-przeznaczenia. Sk³ada siê z dwóch czê¶ci. Zarz±dca po³±czeñ
-(Connection Manager, cnxman) obs³uguje cz³onkostwo, komunikacjê,
-kworum, powiadamianie o zdarzeniach i przej¶cia. Zarz±dca us³ug
-(Service Manager, sm) obs³uguje "grupy us³ug", które s± ogólnym
-sposobem reprezentacji i zarz±dzania instancjami zewnêtrznych systemów
-wymagaj±cych zarz±dzania klastrem. Zarz±dca klastrów CMAN to
-podstawowy system, na którym polegaj± DLM, GFS, CLVM i Fence. API
-CMAN-a w j±drze i przestrzeni u¿ytkownika jest ogólne i w ca³o¶ci
-dostêpne do wykorzystania w innych programach.
+%description -l pl.UTF-8
+MAN to zarzÄ…dca opartych na jÄ…drze symetrycznych klastrÃ³w ogÃ³lnego
+przeznaczenia. SkÅ‚ada siÄ™ z dwÃ³ch czÄ™Å›ci. ZarzÄ…dca poÅ‚Ä…czeÅ„
+(Connection Manager, cnxman) obsÅ‚uguje czÅ‚onkostwo, komunikacjÄ™,
+kworum, powiadamianie o zdarzeniach i przejÅ›cia. ZarzÄ…dca usÅ‚ug
+(Service Manager, sm) obsÅ‚uguje "grupy usÅ‚ug", ktÃ³re sÄ… ogÃ³lnym
+sposobem reprezentacji i zarzÄ…dzania instancjami zewnÄ™trznych systemÃ³w
+wymagajÄ…cych zarzÄ…dzania klastrem. ZarzÄ…dca klastrÃ³w CMAN to
+podstawowy system, na ktÃ³rym polegajÄ… DLM, GFS, CLVM i Fence. API
+CMAN-a w jÄ…drze i przestrzeni uÅ¼ytkownika jest ogÃ³lne i w caÅ‚oÅ›ci
+dostÄ™pne do wykorzystania w innych programach.
 
 %package devel
 Summary:	CMAN header files
-Summary(pl):	Pliki nag³ówkowe CMAN
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe CMAN
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 CMAN header files.
 
-%description devel -l pl
-Pliki nag³ówkowe CMAN.
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe CMAN.
 
 %package static
 Summary:	CMAN static library
-Summary(pl):	Biblioteka statyczna CMAN
+Summary(pl.UTF-8):   Biblioteka statyczna CMAN
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 CMAN static library.
 
-%description devel -l pl
+%description devel -l pl.UTF-8
 Biblioteka statyczna CMAN.
 
 %prep

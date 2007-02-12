@@ -1,5 +1,5 @@
 Summary:	General-purpose symmetric cluster manager
-Summary(pl.UTF-8):   Zarządca symetrycznych klastrów ogólnego przeznaczenia
+Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
 Version:	1.03.00
 Release:	1
@@ -38,7 +38,7 @@ dostępne do wykorzystania w innych programach.
 
 %package devel
 Summary:	CMAN header files
-Summary(pl.UTF-8):   Pliki nagłówkowe CMAN
+Summary(pl.UTF-8):	Pliki nagłówkowe CMAN
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -50,7 +50,7 @@ Pliki nagłówkowe CMAN.
 
 %package static
 Summary:	CMAN static library
-Summary(pl.UTF-8):   Biblioteka statyczna CMAN
+Summary(pl.UTF-8):	Biblioteka statyczna CMAN
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 

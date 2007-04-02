@@ -1,14 +1,19 @@
+#
+# Conditional build:
+%bcond_with     libonly		# build package only with lib (needed bootstrap with ccs)
+#
 Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-Version:	1.03.00
+Version:	2.00.00
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	8eea23df70d2007c4fb8c234cfea49cf
+# Source0-md5:	2ef3f4ba9d3c87b50adfc9b406171085
 URL:		http://sources.redhat.com/cluster/cman/
-BuildRequires:	ccs-devel
+%{!?with_libonly:BuildRequires:	ccs-devel}
+BuildRequires:	openais-devel
 BuildRequires:	perl-base
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -62,9 +67,6 @@ Biblioteka statyczna CMAN.
 
 %prep
 %setup -q -n cluster-%{version}
-install -d %{name}/include/cluster
-ln -s . %{name}/include/cluster/cluster
-install %{name}-kernel/src/cnxman-socket.h %{name}/include/cluster
 
 cd %{name}
 %{__perl} -pi -e 's/-g -O/%{rpmcflags}/' lib/Makefile
@@ -73,12 +75,13 @@ cd %{name}
 %build
 cd %{name}
 ./configure \
+	--ccsincdir="$PWD/../ccs/lib" \
 	--incdir=%{_includedir} \
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir}
-%{__make} \
+%{__make} %{?with_libonly:-C lib} \
 	CC="%{__cc}" \
 	incdir=`pwd`/include
 
@@ -86,11 +89,8 @@ cd %{name}
 rm -rf $RPM_BUILD_ROOT
 cd %{name}
 
-%{__make} install \
+%{__make} %{?with_libonly:-C lib} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-install -d $RPM_BUILD_ROOT%{_includedir}/cluster
-install include/cluster/cnxman-socket.h $RPM_BUILD_ROOT%{_includedir}/cluster
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,8 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/*
+%{!?with_libonly:%attr(755,root,root) %{_sbindir}/*}
 %attr(755,root,root) %{_libdir}/libcman.so.*.*
+%if %{without libonly}
 %{_mandir}/man5/cman.5*
 %{_mandir}/man5/qdisk.5*
 %{_mandir}/man8/cman_tool.8*
@@ -109,13 +110,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/qdiskd.8*
 #%attr(754,root,root) /etc/rc.d/init.d/cman
 #%attr(754,root,root) /etc/rc.d/init.d/qdiskd
+%endif
 
 %files devel
 %defattr(644,root,root,755)
-# XXX dir shared with dml-devel
-%dir %{_includedir}/cluster
 %{_includedir}/*.h
-%{_includedir}/cluster/*.h
 %attr(755,root,root) %{_libdir}/libcman.so
 
 %files static

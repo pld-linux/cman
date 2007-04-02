@@ -78,6 +78,7 @@ cd %{name}
 	--ccsincdir="$PWD/../ccs/lib" \
 	--incdir=%{_includedir} \
 	--libdir=%{_libdir} \
+	--libexecdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir}
@@ -103,6 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 %{!?with_libonly:%attr(755,root,root) %{_sbindir}/*}
 %attr(755,root,root) %{_libdir}/libcman.so.*.*
 %if %{without libonly}
+%attr(755,root,root) %{_libdir}/lcrso/service_cman.lcrso
 %{_mandir}/man5/cman.5*
 %{_mandir}/man5/qdisk.5*
 %{_mandir}/man8/cman_tool.8*

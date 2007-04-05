@@ -11,6 +11,8 @@ License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
 # Source0-md5:	2ef3f4ba9d3c87b50adfc9b406171085
+Source1:	%{name}.init
+Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/cman/
 %{!?with_libonly:BuildRequires:	ccs-devel}
 BuildRequires:	openais-devel
@@ -88,19 +90,34 @@ cd %{name}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{/etc/sysconfig,/etc/rc.d/init.d}
 cd %{name}
 
 %{__make} %{?with_libonly:-C lib} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install %SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %SOURCE2 $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
+%post	
+/sbin/ldconfig
+/sbin/chkconfig --add %{name}
+
 %postun	-p /sbin/ldconfig
+
+%preun
+if [ "$1" = "0" ]; then
+	%service -q %{name} stop
+	/sbin/chkconfig --del %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
 %{!?with_libonly:%attr(755,root,root) %{_sbindir}/*}
 %attr(755,root,root) %{_libdir}/libcman.so.*.*
 %if %{without libonly}

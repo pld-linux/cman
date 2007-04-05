@@ -17,6 +17,7 @@ URL:		http://sources.redhat.com/cluster/cman/
 %{!?with_libonly:BuildRequires:	ccs-devel}
 BuildRequires:	openais-devel
 BuildRequires:	perl-base
+Requires(post):	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -102,7 +103,7 @@ install %SOURCE2 $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	
+%post
 /sbin/ldconfig
 /sbin/chkconfig --add %{name}
 

@@ -6,7 +6,7 @@ Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
 Version:	2.00.00
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
@@ -58,6 +58,7 @@ Obsoletes:	magma
 Obsoletes:	magma-devel
 Obsoletes:	magma-plugins
 Obsoletes:	magma-static
+Conflicts:	cman < 2.00.00-2
 
 %description libs
 CMAN library.

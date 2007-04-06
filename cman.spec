@@ -54,6 +54,7 @@ Group:		Libraries
 Obsoletes:	gulm
 Obsoletes:	gulm-devel
 Obsoletes:	gulm-static
+Obsoletes:	iddev
 Obsoletes:	magma
 Obsoletes:	magma-devel
 Obsoletes:	magma-plugins

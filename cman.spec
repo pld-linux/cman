@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with     libonly		# build package only with lib (needed bootstrap with ccs)
+%bcond_with	libonly		# build package only with lib (needed bootstrap with ccs)
 #
 Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
@@ -17,10 +17,13 @@ URL:		http://sources.redhat.com/cluster/cman/
 %{!?with_libonly:BuildRequires:	ccs-devel}
 BuildRequires:	openais-devel
 BuildRequires:	perl-base
-Requires(post):	/sbin/ldconfig
+Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
+
+# aliasing problems in qdisk/disk.c
+%define		specflags	-fno-strict-aliasing
 
 %description
 MAN is a symmetric, general-purpose, kernel-based cluster manager. It
@@ -44,11 +47,22 @@ podstawowy system, na którym polegają DLM, GFS, CLVM i Fence. API
 CMAN-a w jądrze i przestrzeni użytkownika jest ogólne i w całości
 dostępne do wykorzystania w innych programach.
 
+%package libs
+Summary:	CMAN library
+Summary(pl.UTF-8):	Biblioteka CMAN
+Group:		Libraries
+
+%description libs
+CMAN library.
+
+%description libs -l pl.UTF-8
+Biblioteka CMAN.
+
 %package devel
 Summary:	CMAN header files
 Summary(pl.UTF-8):	Pliki nagłówkowe CMAN
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 CMAN header files.
@@ -72,8 +86,8 @@ Biblioteka statyczna CMAN.
 %setup -q -n cluster-%{version}
 
 cd %{name}
-%{__perl} -pi -e 's/-g -O/%{rpmcflags}/' lib/Makefile
-%{__perl} -pi -e 's/-g/%{rpmcflags}/' {cman_tool,tests}/Makefile
+%{__perl} -pi -e 's/ -g/ %{rpmcflags}/' {lib,qdisk,tests}/Makefile
+%{__perl} -pi -e 's/ -O2 /%{rpmcflags}/' {cman_tool,daemon}/Makefile
 
 %build
 cd %{name}
@@ -92,22 +106,18 @@ cd %{name}
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/etc/sysconfig,/etc/rc.d/init.d}
-cd %{name}
 
-%{__make} %{?with_libonly:-C lib} install \
+%{__make} -C %{name}%{?with_libonly:/lib} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install %SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install %SOURCE2 $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
 /sbin/chkconfig --add %{name}
-
-%postun	-p /sbin/ldconfig
 
 %preun
 if [ "$1" = "0" ]; then
@@ -115,27 +125,32 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del %{name}
 fi
 
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
+
+%if %{without libobly}
 %files
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
-%{!?with_libonly:%attr(755,root,root) %{_sbindir}/*}
-%attr(755,root,root) %{_libdir}/libcman.so.*.*
-%if %{without libonly}
+#%attr(754,root,root) /etc/rc.d/init.d/qdiskd
+%attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/lcrso/service_cman.lcrso
 %{_mandir}/man5/cman.5*
 %{_mandir}/man5/qdisk.5*
 %{_mandir}/man8/cman_tool.8*
 %{_mandir}/man8/mkqdisk.8*
 %{_mandir}/man8/qdiskd.8*
-#%attr(754,root,root) /etc/rc.d/init.d/cman
-#%attr(754,root,root) /etc/rc.d/init.d/qdiskd
 %endif
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libcman.so.*.*
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*.h
 %attr(755,root,root) %{_libdir}/libcman.so
+%{_includedir}/*.h
 
 %files static
 %defattr(644,root,root,755)

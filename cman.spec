@@ -51,6 +51,13 @@ dostępne do wykorzystania w innych programach.
 Summary:	CMAN library
 Summary(pl.UTF-8):	Biblioteka CMAN
 Group:		Libraries
+Obsoletes:	gulm
+Obsoletes:	gulm-devel
+Obsoletes:	gulm-static
+Obsoletes:	magma
+Obsoletes:	magma-devel
+Obsoletes:	magma-plugins
+Obsoletes:	magma-static
 
 %description libs
 CMAN library.

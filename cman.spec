@@ -6,7 +6,7 @@ Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
 Version:	2.00.00
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz

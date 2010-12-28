@@ -5,16 +5,17 @@
 Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-Version:	2.00.00
-Release:	3
+Version:	2.03.10
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	2ef3f4ba9d3c87b50adfc9b406171085
+# Source0-md5:	379b560096e315d4b52e238a5c72ba4a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/cman/
 %{!?with_libonly:BuildRequires:	ccs-devel}
+BuildRequires:	ncurses-devel
 BuildRequires:	openais-devel
 BuildRequires:	perl-base
 Requires:	%{name}-libs = %{version}-%{release}
@@ -99,15 +100,20 @@ cd %{name}
 %{__perl} -pi -e 's/ -O2 /%{rpmcflags}/' {cman_tool,daemon}/Makefile
 
 %build
-cd %{name}
 ./configure \
-	--ccsincdir="$PWD/../ccs/lib" \
+	--without_kernel_modules \
+	--without_gfs \
+	--without_gfs2 \
+	--without_gnbd \
+	--ccsincdir="$PWD/ccs/lib" \
 	--incdir=%{_includedir} \
+	--ncursesincdir=%{_includedir}/ncurses \
 	--libdir=%{_libdir} \
 	--libexecdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir}
+
 %{__make} %{?with_libonly:-C lib} \
 	CC="%{__cc}" \
 	incdir=`pwd`/include

@@ -89,7 +89,7 @@ Requires:	%{name}-devel = %{version}-%{release}
 %description static
 CMAN static library.
 
-%description devel -l pl.UTF-8
+%description static -l pl.UTF-8
 Biblioteka statyczna CMAN.
 
 %prep

@@ -14,9 +14,9 @@ Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/cman/
-%{!?with_libonly:BuildRequires:	ccs-devel}
+%{!?with_libonly:BuildRequires:	ccs-devel >= 2.03.10}
 BuildRequires:	ncurses-devel
-BuildRequires:	openais-devel
+BuildRequires:	openais-devel < 1.0
 BuildRequires:	perl-base
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -95,28 +95,24 @@ Biblioteka statyczna CMAN.
 %prep
 %setup -q -n cluster-%{version}
 
-cd %{name}
-%{__perl} -pi -e 's/ -g/ %{rpmcflags}/' {lib,qdisk,tests}/Makefile
-%{__perl} -pi -e 's/ -O2 /%{rpmcflags}/' {cman_tool,daemon}/Makefile
-
 %build
 ./configure \
-	--without_kernel_modules \
-	--without_gfs \
-	--without_gfs2 \
-	--without_gnbd \
-	--ccsincdir="$PWD/ccs/lib" \
+	--cc="%{__cc}" \
+	--cflags="%{rpmcflags} -Wall" \
+	--ldflags="%{rpmldflags}" \
 	--incdir=%{_includedir} \
 	--ncursesincdir=%{_includedir}/ncurses \
 	--libdir=%{_libdir} \
 	--libexecdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
-	--sbindir=%{_sbindir}
+	--sbindir=%{_sbindir} \
+	--without_gfs \
+	--without_gfs2 \
+	--without_gnbd \
+	--without_kernel_modules
 
-%{__make} %{?with_libonly:-C lib} \
-	CC="%{__cc}" \
-	incdir=`pwd`/include
+%{__make} -C %{name}%{?with_libonly:/lib}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -125,8 +121,10 @@ install -d $RPM_BUILD_ROOT{/etc/sysconfig,/etc/rc.d/init.d}
 %{__make} -C %{name}%{?with_libonly:/lib} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%if %{without libonly}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -161,11 +159,12 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libcman.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/libcman.so.2
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libcman.so
-%{_includedir}/*.h
+%{_includedir}/libcman.h
 
 %files static
 %defattr(644,root,root,755)

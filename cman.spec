@@ -6,7 +6,7 @@ Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
 Version:	2.03.10
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
@@ -95,6 +95,9 @@ Biblioteka statyczna CMAN.
 %prep
 %setup -q -n cluster-%{version}
 
+# there are warnings caused by some unused variables
+%{__sed} -i -e 's/-Werror //' %{name}/qdisk/Makefile
+
 %build
 ./configure \
 	--cc="%{__cc}" \
@@ -146,8 +149,11 @@ fi
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
+# TODO: PLDify
 #%attr(754,root,root) /etc/rc.d/init.d/qdiskd
-%attr(755,root,root) %{_sbindir}/*
+%attr(755,root,root) %{_sbindir}/cman_tool
+%attr(755,root,root) %{_sbindir}/mkqdisk
+%attr(755,root,root) %{_sbindir}/qdiskd
 %attr(755,root,root) %{_libdir}/lcrso/service_cman.lcrso
 %{_mandir}/man5/cman.5*
 %{_mandir}/man5/qdisk.5*

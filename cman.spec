@@ -1,3 +1,4 @@
+# NOTE: obsoleted by -cman subpackages from cluster.spec (3.x)
 #
 # Conditional build:
 %bcond_with	libonly		# build package only with lib (needed bootstrap with ccs)
@@ -5,18 +6,19 @@
 Summary:	General-purpose symmetric cluster manager
 Summary(pl.UTF-8):	Zarządca symetrycznych klastrów ogólnego przeznaczenia
 Name:		cman
-Version:	2.03.10
-Release:	2
+Version:	2.03.11
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	379b560096e315d4b52e238a5c72ba4a
+# Source0-md5:	712b9f583472d1de614641bc0f4a0aaf
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Patch0:		cluster-kernel.patch
 URL:		http://sources.redhat.com/cluster/cman/
 %{!?with_libonly:BuildRequires:	ccs-devel >= 2.03.10}
 BuildRequires:	ncurses-devel
-BuildRequires:	openais-devel < 1.0
+%{!?with_libonly:BuildRequires:	openais-devel < 1.0}
 BuildRequires:	perl-base
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -94,6 +96,7 @@ Biblioteka statyczna CMAN.
 
 %prep
 %setup -q -n cluster-%{version}
+%patch0 -p1
 
 # there are warnings caused by some unused variables
 %{__sed} -i -e 's/-Werror //' %{name}/qdisk/Makefile
